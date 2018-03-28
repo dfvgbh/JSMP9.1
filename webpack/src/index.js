@@ -1,1 +1,3 @@
-console.log('My name is index.js');
+const f = () => console.log('loool');
+
+f();
