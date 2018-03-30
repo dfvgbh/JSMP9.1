@@ -1,0 +1,10 @@
+{
+//    "extends": "airbnb-base",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "rules": {
+        "prefer-const": ["error", {"destructuring": "all"}]
+    }
+}
