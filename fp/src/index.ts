@@ -4,7 +4,7 @@ enum TaskType {
   Common = 'common'
 }
 
-interface Task extends Object {
+interface Task {
   name: string;
   duration: number;
   type: TaskType;
