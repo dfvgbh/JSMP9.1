@@ -22,15 +22,12 @@ const tasks: Task[] =  [
 
 const toInt = (number: number) => ~~number;
 
-const toTimeString = (hours: number, minutes: number) => `${hours} hours ${minutes} minutes`;
-
-const minutesToTimeString = (minutes: number) =>
-  toTimeString(toInt(minutes / 60), toInt(minutes % 60));
-
-const buildTaskString = (name: string, duration: string) =>
-    `Total duration of '${name}' is ${duration}`;
-
-const taskToString = (task: Task) => buildTaskString(task.name, minutesToTimeString(task.duration));
+const taskToString = (task: Task) => {
+    const { name, duration } = task;
+    const hours = toInt(duration / 60);
+    const minutes = toInt(duration % 60);
+    return `Total duration of '${name}' is ${hours} hours ${minutes} minutes`;
+};
 
 const hasType = (type: TaskType) => (task: Task) => task.type === type;
 
@@ -39,5 +36,22 @@ const hasTypesWorkPrivate = (task: Task) =>
 
 const logTask = (task: Task) => console.log(taskToString(task));
 
-tasks.filter(hasTypesWorkPrivate)
+const groupTasksReducer = (tasks: Task[], task: Task) => {
+    const groupedTasks = [...tasks];
+    const targetIndex = groupedTasks.findIndex(
+        ({ name, type }: Task) => task.name === name && task.type === type);
+
+    targetIndex === -1
+        ? groupedTasks.push(task)
+        : groupedTasks[targetIndex] = {
+            ...groupedTasks[targetIndex],
+            duration: groupedTasks[targetIndex].duration + task.duration
+        };
+
+    return groupedTasks;
+};
+
+tasks
+  .filter(hasTypesWorkPrivate)
+  .reduce(groupTasksReducer, [])
   .map(logTask);

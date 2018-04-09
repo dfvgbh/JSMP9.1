@@ -22,23 +22,39 @@ const tasks: Task[] =  [
   { name: 'Fill time journal', duration: 10, type: TaskType.Work }
 ];
 
-const hasType = (type: TaskType) => (task: Task) => task.type === type;
-
 const toInt = (number: number) => ~~number;
 
-const toTimeString = (hours: number, minutes: number) => `${hours} hours ${minutes} minutes`;
+const taskToString = (task: Task) => {
+  const { name, duration } = task;
+  const hours = toInt(duration / 60);
+  const minutes = toInt(duration % 60);
+  return `Total duration of '${name}' is ${hours} hours ${minutes} minutes`;
+};
 
-const minutesToTimeString = (minutes: number) =>
-  toTimeString(toInt(minutes / 60), toInt(minutes % 60));
+const hasType = R.curry(
+    (type: TaskType, task: Task) => task.type === type
+);
 
-const buildTaskString = (name: string, duration: string) =>
-  `Total duration of '${name}' is ${duration}`;
+const hasTypesWorkPrivate = R.either(
+    hasType(TaskType.Work),
+    hasType(TaskType.Private)
+);
 
-const taskToString = (task: Task) => buildTaskString(task.name, minutesToTimeString(task.duration));
-
-const log = (string: string) => console.log(string);
-
-
-const hasTypesWorkPrivate = R.either(hasType(TaskType.Work), hasType(TaskType.Private));
 const workPrivateTasks = R.filter(hasTypesWorkPrivate, tasks);
-R.map(R.compose(log, taskToString), workPrivateTasks);
+
+const taskDurationReducer = (accum: Task, task: Task): Task => R.evolve(
+  { duration: R.add(accum.duration || 0) },
+  task
+);
+
+R.pipe(
+  R.groupBy(({ name, type }: Task) => `${name}_${type}`),
+  R.values,
+  R.map(
+    R.pipe(
+      R.reduce(taskDurationReducer, {}),
+      taskToString,
+      console.log
+    )
+  )
+)(workPrivateTasks);
