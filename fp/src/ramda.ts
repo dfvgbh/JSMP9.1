@@ -40,14 +40,13 @@ const hasTypesWorkPrivate = R.either(
     hasType(TaskType.Private)
 );
 
-const workPrivateTasks = R.filter(hasTypesWorkPrivate, tasks);
-
 const taskDurationReducer = (accum: Task, task: Task): Task => R.evolve(
   { duration: R.add(accum.duration || 0) },
   task
 );
 
 R.pipe(
+  R.filter(hasTypesWorkPrivate),
   R.groupBy(({ name, type }: Task) => `${name}_${type}`),
   R.values,
   R.map(
@@ -57,4 +56,4 @@ R.pipe(
       console.log
     )
   )
-)(workPrivateTasks);
+)(tasks);
