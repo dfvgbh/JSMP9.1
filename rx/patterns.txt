@@ -1,0 +1,5 @@
+1. Observer
+2. Iterator
+3. Prototype
+4. Decorator
+5. Singleton
