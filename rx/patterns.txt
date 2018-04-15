@@ -1,5 +1,6 @@
 1. Observer
-2. Iterator
-3. Prototype
+2. Cascade
+3. Iterator
 4. Decorator
 5. Singleton
+6. Prototype
