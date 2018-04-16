@@ -1,18 +1,17 @@
 import { Observable } from 'rxjs/Observable';
-import { takeOnly, toLoPerCase, symbolInterval, MiracleSubject } from './operators';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { takeOnly, switchCase, symbolInterval } from './operators';
+import { SkipSubject } from './skipSubject';
 
-const source$: Observable<string> = symbolInterval(200);
-const vowels = 'AEIOUY';
-const sub = new MiracleSubject<number>(2);
+const source$: Observable<string> = symbolInterval(500);
+const vowels = 'aeiouy';
 
-// source$
-//   .pipe(
-//     takeOnly(vowels),
-//     toLoPerCase
-//   ).subscribe(data => console.log(`Symbols: ${data}`));
+source$
+  .pipe(
+    takeOnly(vowels),
+    switchCase
+  ).subscribe(data => console.log(`Symbols: ${data}`));
 
-
+const sub = new SkipSubject<number>(2);
 sub.subscribe(v => console.log('Sub1', v));
 sub.next(1);
 sub.next(2);
