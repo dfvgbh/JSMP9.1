@@ -1,5 +1,36 @@
 1. Observer
+- RxJS in general
+
 2. Cascade
+- cascading operators
+Rx.Observable.fromEvent(button, 'click')
+  .throttleTime(1000)
+  .map(event => event.clientX)
+  .scan((count, clientX) => count + clientX, 0)
+  .subscribe(count => console.log(count));
+
 3. Iterator
+- File rxjs/observable/IntervalObservable
+
 4. Singleton
+- AsyncScheduler rxjs/src/scheduler/async.ts
+
 5. Prototype
+- JavaScript's prototypes:
+var OuterSubscriber = (function (_super) {
+    __extends(OuterSubscriber, _super);
+    function OuterSubscriber() {
+        _super.apply(this, arguments);
+    }
+    OuterSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
+        this.destination.next(innerValue);
+    };
+    OuterSubscriber.prototype.notifyError = function (error, innerSub) {
+        this.destination.error(error);
+    };
+    OuterSubscriber.prototype.notifyComplete = function (innerSub) {
+        this.destination.complete();
+    };
+    return OuterSubscriber;
+}(Subscriber_1.Subscriber));
+exports.OuterSubscriber = OuterSubscriber;
