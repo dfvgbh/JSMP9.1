@@ -41,4 +41,44 @@ router.delete('/', (req, res, next) => {
   });
 });
 
+
+router.post('/', (req, res, next) => {
+  const body = req.body;
+
+  fs.readFile(NOTES_PATH, (err, data) => {
+    if (err) throw err;
+    const notes = JSON.parse(data);
+    body.id = notes[notes.length - 1].id + 1;
+    body.isDone = false;
+    notes.push(body);
+
+    const result = JSON.stringify(notes, null, 1);
+
+    fs.writeFile(NOTES_PATH, result, err => {
+      if (err) throw err;
+      res.sendStatus(200);
+    });
+  });
+});
+
+
+router.put('/', (req, res, next) => {
+  const body = req.body;
+
+  fs.readFile(NOTES_PATH, (err, data) => {
+    if (err) throw err;
+    const notes = JSON.parse(data);
+    const target = notes.find(note => note.id === body.id);
+
+    Object.assign(target, body);
+
+    const result = JSON.stringify(notes, null, 1);
+
+    fs.writeFile(NOTES_PATH, result, err => {
+      if (err) throw err;
+      res.sendStatus(200);
+    });
+  });
+});
+
 module.exports = router;

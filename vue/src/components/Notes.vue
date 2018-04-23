@@ -7,6 +7,7 @@
     <base-input-text
       v-model="newNoteText"
       placeholder="New note"
+      @keydown.enter="addNote"
     />
     <ul v-if="notes.length">
       <note-item
@@ -15,6 +16,7 @@
         :note="note"
         v-if="filterNote(note)"
         @remove="removeNote"
+        @done="markAsDone"
       />
     </ul>
     <p v-else>
@@ -28,51 +30,50 @@ import { HTTP } from '../api';
 import BaseInputText from './BaseTextInput';
 import NoteItem from './NoteItem';
 
-const getNotes = () => {
-  return HTTP.get('/notes')
-    .then(({ data }) => data);
-};
-
-const removeNote = (id) => {
-  return HTTP.delete('/notes', {
+const removeNote = (id) =>
+  HTTP.delete('/notes', {
     params: { id }
   });
+const addNote = (title) => HTTP.post('/notes', { title });
+const updateNote = (note) => HTTP.put('/notes', note);
+
+const includes = (query, note) => {
+  return note &&
+    ((note.title && note.title.includes(query)) ||
+    (note.content && note.content.includes(query)));
 };
 
 export default {
   components: {
     BaseInputText, NoteItem
   },
+  props: {
+    notes: {
+      type: Array,
+      required: true
+    }
+  },
   data () {
     return {
       searchText: '',
-      newNoteText: '',
-      notes: []
+      newNoteText: ''
     };
   },
-  beforeRouteEnter (to, from, next) {
-    getNotes()
-      .then(notes => next(vm => vm.setNotes(null, notes)))
-      .catch(err => next(vm => vm.setNotes(err)));
-  },
   methods: {
-    setNotes (err, notes) {
-      if (err) {
-        this.error = err.toString();
-      } else {
-        this.notes = notes;
-      }
-    },
     filterNote (note) {
-      return !this.searchText ||
-        note.title.includes(this.searchText) ||
-        note.content.includes(this.searchText);
+      return !this.searchText || includes(this.searchText, note);
     },
     removeNote (id) {
       removeNote(id)
-        .then(getNotes)
-        .then(notes => this.setNotes(null, notes))
-        .catch(this.setNotes);
+        .then(() => this.$emit('reload'));
+    },
+    addNote () {
+      addNote(this.newNoteText)
+        .then(() => this.$emit('reload'));
+    },
+    markAsDone (id) {
+      updateNote({ id, isDone: true })
+        .then(() => this.$emit('reload'));
     }
   }
 };

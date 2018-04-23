@@ -1,10 +1,13 @@
 <template>
   <li>
-    {{ note.title }}
+    <span v-bind:class="{ done: note.isDone }">{{ note.title }}</span>
     <br />
     {{ note.content }}
     <button @click="$emit('remove', note.id)">
       X
+    </button>
+    <button @click="$emit('done', note.id)">
+      Done
     </button>
   </li>
 </template>
@@ -19,3 +22,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+  .done {
+    color: forestgreen;
+  }
+</style>
