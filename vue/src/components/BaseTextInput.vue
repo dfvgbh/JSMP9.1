@@ -1,10 +1,16 @@
 <template>
-  <input
-    type="text"
-    class="input"
-    :value="value"
-    v-on="listeners"
-  >
+  <div class="container">
+    <div class="form-group row">
+      <label class="col-sm-3" for="exampleInputPassword1">Input</label>
+      <input
+        type="text"
+        class="form-control col-sm-9"
+        id="exampleInputPassword1"
+        :value="value"
+        v-on="listeners"
+      >
+    </div>
+  </div>
 </template>
 
 <script>

@@ -9,6 +9,16 @@
     <button @click="$emit('done', note.id)">
       Done
     </button>
+    <button
+      v-if="note.isArchived"
+      @click="$emit('rearchive', note.id)">
+      Rearchive
+    </button>
+    <button
+      v-else
+      @click="$emit('archive', note.id)">
+      Archive
+    </button>
   </li>
 </template>
 

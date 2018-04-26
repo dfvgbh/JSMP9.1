@@ -4,7 +4,7 @@
       :notes="notes"
       @reload="reloadNotes"
     />
-    <router-link to="archive">Archive</router-link>
+    <router-link to="/">Home</router-link>
   </div>
 </template>
 
@@ -13,7 +13,11 @@ import { HTTP } from '../api';
 import Notes from './Notes';
 
 const getNotes = () =>
-  HTTP.get('/notes')
+  HTTP.get('/notes', {
+    params: {
+      archived: true
+    }
+  })
     .then(({ data }) => data);
 
 export default {

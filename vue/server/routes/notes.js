@@ -4,12 +4,28 @@ var fs = require('fs');
 var path = require('path');
 var NOTES_PATH = path.join(__dirname, '../models/notes.json');
 
-/* GET users listing. */
 router.get('/', function(req, res, next) {
+  const onlyArchived = req.query.archived;
+
   fs.readFile(NOTES_PATH, (err, data) => {
     if (err) throw err;
     var notes = JSON.parse(data);
+    notes = onlyArchived
+      ? notes.filter(({ isArchived }) => isArchived)
+      : notes.filter(({ isArchived }) => !isArchived);
     res.send(notes);
+  });
+});
+
+router.get('/:id', function(req, res, next) {
+  const id = +req.params.id;
+
+  fs.readFile(NOTES_PATH, (err, data) => {
+    if (err) throw err;
+    const notes = JSON.parse(data);
+    const result = notes.find(note => note.id === id);
+
+    result === undefined ? res.send({}) : res.send(result);
   });
 });
 
@@ -50,6 +66,7 @@ router.post('/', (req, res, next) => {
     const notes = JSON.parse(data);
     body.id = notes[notes.length - 1].id + 1;
     body.isDone = false;
+    body.isArchived = false;
     notes.push(body);
 
     const result = JSON.stringify(notes, null, 1);

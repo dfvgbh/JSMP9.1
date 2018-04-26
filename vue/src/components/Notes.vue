@@ -17,6 +17,8 @@
         v-if="filterNote(note)"
         @remove="removeNote"
         @done="markAsDone"
+        @archive="archiveNote"
+        @rearchive="rearchiveNote"
       />
     </ul>
     <p v-else>
@@ -73,6 +75,14 @@ export default {
     },
     markAsDone (id) {
       updateNote({ id, isDone: true })
+        .then(() => this.$emit('reload'));
+    },
+    archiveNote (id) {
+      updateNote({ id, isArchived: true })
+        .then(() => this.$emit('reload'));
+    },
+    rearchiveNote (id) {
+      updateNote({ id, isArchived: false })
         .then(() => this.$emit('reload'));
     }
   }
