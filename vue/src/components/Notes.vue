@@ -4,11 +4,6 @@
       v-model="searchText"
       placeholder="Search text"
     />
-    <base-input-text
-      v-model="newNoteText"
-      placeholder="New note"
-      @keydown.enter="addNote"
-    />
     <ul v-if="notes.length">
       <note-item
         v-for="note in notes"
@@ -36,7 +31,6 @@ const removeNote = (id) =>
   HTTP.delete('/notes', {
     params: { id }
   });
-const addNote = (title) => HTTP.post('/notes', { title });
 const updateNote = (note) => HTTP.put('/notes', note);
 
 const includes = (query, note) => {
@@ -57,8 +51,7 @@ export default {
   },
   data () {
     return {
-      searchText: '',
-      newNoteText: ''
+      searchText: ''
     };
   },
   methods: {
@@ -67,10 +60,6 @@ export default {
     },
     removeNote (id) {
       removeNote(id)
-        .then(() => this.$emit('reload'));
-    },
-    addNote () {
-      addNote(this.newNoteText)
         .then(() => this.$emit('reload'));
     },
     markAsDone (id) {

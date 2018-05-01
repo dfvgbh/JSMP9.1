@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div class="container-fluid">
+    <add-note
+      class="col-6"
+      @reload="reloadNotes"
+    />
     <notes
       :notes="notes"
       @reload="reloadNotes"
@@ -11,6 +15,7 @@
 <script>
 import { HTTP } from '../api';
 import Notes from './Notes';
+import AddNote from './AddNote';
 
 const getNotes = () =>
   HTTP.get('/notes')
@@ -18,7 +23,7 @@ const getNotes = () =>
 
 export default {
   components: {
-    Notes
+    Notes, AddNote
   },
   data () {
     return {

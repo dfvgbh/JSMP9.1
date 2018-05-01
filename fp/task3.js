@@ -66,16 +66,16 @@ function renderInstruments(data) {
 
   setWinrate(data[0].win);
 
-  html += `<option selected value=${data[0].id} data-winrate=${data[0].win}>${data[0].name}</option>`;
+  html += `<option selected value=${data[0].id} data-winrate=${data[0].win}>${data[0].content}</option>`;
   instruments[data[0].id] = {
-    name: data[0].name,
+    name: data[0].content,
     length: data[0].length
   };
 
   for (let i = 1; i < data.length; i++) {
-    html += `<option value=${data[i].id} data-winrate=${data[i].win}>${data[i].name}</option>`;
+    html += `<option value=${data[i].id} data-winrate=${data[i].win}>${data[i].content}</option>`;
     instruments[data[i].id] = {
-      name: data[i].name,
+      name: data[i].content,
       length: data[i].length
     };
   }
