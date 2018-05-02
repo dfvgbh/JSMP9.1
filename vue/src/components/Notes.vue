@@ -1,10 +1,13 @@
 <template>
   <div>
-    <base-input-text
+    <b-form-input
+      class="col-6"
       v-model="searchText"
-      placeholder="Search text"
-    />
-    <ul v-if="notes.length">
+      placeholder="Search"
+    ></b-form-input>
+    <ul
+      v-if="notes.length"
+      class="list">
       <note-item
         v-for="note in notes"
         :key="note.id"
@@ -24,7 +27,6 @@
 
 <script>
 import { HTTP } from '../api';
-import BaseInputText from './BaseTextInput';
 import NoteItem from './NoteItem';
 
 const removeNote = (id) =>
@@ -41,7 +43,7 @@ const includes = (query, note) => {
 
 export default {
   components: {
-    BaseInputText, NoteItem
+    NoteItem
   },
   props: {
     notes: {
@@ -79,5 +81,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  .list {
+    list-style-type: none;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
 </style>

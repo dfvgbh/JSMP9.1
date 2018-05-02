@@ -4,11 +4,11 @@
       class="col-6"
       @reload="reloadNotes"
     />
+    <router-link to="archive">Go to Archive</router-link>
     <notes
       :notes="notes"
       @reload="reloadNotes"
     />
-    <router-link to="archive">Archive</router-link>
   </div>
 </template>
 

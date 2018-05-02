@@ -1,10 +1,10 @@
 <template>
   <div>
+    <router-link to="/">Go Home</router-link>
     <notes
       :notes="notes"
       @reload="reloadNotes"
     />
-    <router-link to="/">Home</router-link>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <b-form @submit="onSubmit" @reset="onReset" v-if="show" class="clearfix">
+    <b-form @submit="onSubmit" @reset="onCancel" class="clearfix form">
       <b-form-group label="Title:"
                     label-for="titleInput">
         <b-form-input id="titleInput"
@@ -20,8 +20,8 @@
         </b-form-input>
       </b-form-group>
       <div class="float-right">
-        <b-button type="submit" variant="primary">Add note</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
+        <b-button type="submit" variant="primary">Save</b-button>
+        <b-button type="reset" variant="danger">Cancel</b-button>
       </div>
     </b-form>
   </div>
@@ -30,7 +30,11 @@
 <script>
 import { HTTP } from '../api';
 
-const addNote = (data) => HTTP.post('/notes', data);
+const getNote = (id) =>
+  HTTP.get(`/notes/${id}`)
+    .then(({ data }) => data);
+
+const updateNote = (note) => HTTP.put('/notes', note);
 
 export default {
   data () {
@@ -38,32 +42,47 @@ export default {
       form: {
         title: '',
         content: ''
-      },
-      show: true
+      }
     };
+  },
+  beforeRouteEnter (to, from, next) {
+    getNote(to.params.id)
+      .then(note => next(vm => Object.assign(vm.form, note)));
   },
   methods: {
     onSubmit (evt) {
       evt.preventDefault();
-      addNote(this.form)
-        .then(() => this.$emit('reload'));
+      updateNote({
+        ...this.$route.params,
+        ...this.form
+      })
+        .then(() => this.$router.go(-1));
     },
-    onReset (evt) {
+    onCancel (evt) {
       evt.preventDefault();
-      this.form.title = '';
-      this.form.content = '';
-      /* Trick to reset/clear native browser form validation state */
-      this.show = false;
-      this.$nextTick(() => { this.show = true; });
+      this.$router.go(-1);
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
   .wrapper {
-    background-color: violet;
-    margin: 12px 0;
-    padding: 20px 10px;
+    background-color: rgba(0, 0, 0, .8);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .form {
+    transform: translate(-50%, -50%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 5px;
   }
 </style>
