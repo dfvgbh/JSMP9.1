@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const Device = require('../models/device');
 const fetchUrl = require('fetch').fetchUrl;
+const Logger = require('../halpers/logger');
 
 router.get('/', (req, res) => {
     Device.find((err, docs) => {
         if (err) {
+            Logger.log(err.message);
             res.sendStatus(500);
             return;
         }
@@ -28,6 +30,8 @@ router.post('/', async (req, res) => {
         isOn: false
     });
 
+    Logger.log('New device was created');
+
     res.sendStatus(201);
 });
 
@@ -36,8 +40,10 @@ router.delete('/:id', async (req, res) => {
 
     try {
         await Device.findByIdAndRemove(id).exec();
+        Logger.log(`Device ${id} was deleted`);
         res.sendStatus(200);
     } catch(e) {
+        Logger.log(e.message);
         res.sendStatus(500);
     }
 });
@@ -47,10 +53,13 @@ router.put('/:id', async (req, res) => {
     const { isOn }  = req.body;
     const device = await Device.findById(id);
     const command = '/cm?cmnd=' + (isOn ? 'Power On' : 'Power off');
+    const message = `Device ${device.name} is ` + (isOn ? 'On' : 'Off');
+
 
     fetchUrl(device.ip + command, async (error, meta, body) => {
         device.isOn = isOn;
         await device.save();
+        Logger.log(message);
         res.sendStatus(200);
     });
 });

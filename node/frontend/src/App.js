@@ -19,6 +19,13 @@ class App extends Component {
       .catch(() => {});
   };
 
+  getLogs = () => {
+      fetch('/api/log')
+          .then(res => res.json())
+          .then((res) => console.log(res))
+          .catch(() => {});
+  };
+
   componentDidMount() {
     this.reloadDevices();
   }
@@ -33,6 +40,7 @@ class App extends Component {
         <List devices={this.state.devices}
               onRefresh={this.reloadDevices}/>
         <Form onAdd={this.reloadDevices}/>
+        <a href='http://localhost:3001/api/log' target='_blank'> Get LOg </a>
       </div>
     );
   }
