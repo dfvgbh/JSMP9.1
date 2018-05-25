@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
             return;
         }
 
-        const logs = docs.map(({ record }) => record);
+        const logs = docs.map(({ record, _id }) => ({ record, id: _id }));
         res.json(logs)
     });
 });

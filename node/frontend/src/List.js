@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 class List extends Component {
-    onDelete =(id) => async () => {
+    onDelete = (id) => async () => {
         await fetch(`/api/device/${id}`, {
             headers: {
                 'Content-Type': 'application/json'

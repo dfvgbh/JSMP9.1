@@ -5,14 +5,16 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --inspect index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fake3002": "node fakeDevice.js 3002",
+    "fake3003": "node fakeDevice.js 3003"
   },
-  "author": "Daria Butova <daria_butova@epam.com>",
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.3",
     "fetch": "^1.1.0",
-    "mongoose": "^5.0.17"
+    "mongoose": "^5.0.17",
+    "request": "^2.87.0"
   },
   "devDependencies": {
     "nodemon": "^1.17.3"

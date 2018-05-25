@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 
-class Form extends Component {
+class GroupForm extends Component {
     constructor (props) {
         super(props);
         this.state={
-            name: '',
-            ip: ''
+            groupName: '',
+            deviceName: ''
         };
     }
 
     onSubmit = (event) => {
         event.preventDefault();
-        fetch('/api/device', {
+        fetch('/api/group', {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -31,18 +31,16 @@ class Form extends Component {
         return (
             <form className="form-inline" onSubmit={this.onSubmit}>
                 <div className="form-group mb-2">
-                    <label htmlFor="deviceName" className="sr-only">Device Name</label>
-                    <input type="text" className="form-control" id="deviceName" placeholder="Device Name"
-                           value={this.state.name}
+                    <input type="text" className="form-control" id="groupName" placeholder="Group Name"
+                           value={this.state.groupName}
                            onChange={this.onChange}
-                           name='name'/>
+                           name='groupName'/>
                 </div>
                 <div className="form-group mx-sm-3 mb-2">
-                    <label htmlFor="deviceAddress" className="sr-only">IP Address</label>
-                    <input type="text" className="form-control" id="deviceAddress" placeholder="IP Address"
-                            value={this.state.ip}
+                    <input type="text" className="form-control" id="deviceName" placeholder="Device Name"
+                            value={this.state.deviceName}
                             onChange={this.onChange}
-                            name='ip'/>
+                            name='deviceName'/>
                 </div>
                 <button type="submit" className="btn btn-primary mb-2">Add Device</button>
             </form>
@@ -50,4 +48,4 @@ class Form extends Component {
     }
 }
 
-export default Form;
+export default GroupForm;

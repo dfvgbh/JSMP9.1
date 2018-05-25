@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Device = require('../models/device');
-const fetchUrl = require('fetch').fetchUrl;
-const Logger = require('../halpers/logger');
+const request = require('request');
+const Logger = require('../helpers/logger');
 
 router.get('/', (req, res) => {
     Device.find((err, docs) => {
@@ -55,11 +55,12 @@ router.put('/:id', async (req, res) => {
     const command = '/cm?cmnd=' + (isOn ? 'Power On' : 'Power off');
     const message = `Device ${device.name} is ` + (isOn ? 'On' : 'Off');
 
-
-    fetchUrl(device.ip + command, async (error, meta, body) => {
+  console.log(device.ip + command);
+  request(`${device.ip}${command}`, async (error, response, body) => {
+        error && console.log(error);
         device.isOn = isOn;
         await device.save();
-        Logger.log(message);
+        await Logger.log(message);
         res.sendStatus(200);
     });
 });
